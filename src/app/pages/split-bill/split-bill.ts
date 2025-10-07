@@ -142,41 +142,51 @@ export class SplitBill {
     const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
     const items: Item[] = [];
 
-    const itemRegex = /^([A-Z0-9' .\-]+?)\s+(\d+)%\s+([\d,]+)$/;
+    const itemRegex = /^(.+?)\s+(\d+)%\s+([\d,.]+)$/;
+    const qtyRegex = /^Cad\s+([\d,.]+)\s+Pz\.?\s*(\d+)/i;
     const discountRegex = /^Sconto.+?([\d,]+)$/i;
 
     for (let i = 0; i < lines.length; i++) {
-      const match = lines[i].match(itemRegex);
+      const line = lines[i];
+
+      // Salta righe non prodotto
+      if (/^(DESCRIZIONE|SUBTOTALE|TOTALE|DI CUI IVA)/i.test(line)) continue;
+
+      const match = line.match(itemRegex);
       if (match) {
         const nome = match[1].trim();
         const iva = parseInt(match[2]);
         const prezzo = parseFloat(match[3].replace(',', '.'));
-        const item: Item = { nome, iva, prezzo };
 
-        let nextLineIndex = i + 1;
-        const next = lines[nextLineIndex];
-        const qtyMatch = next?.match(/Cad\s+([\d,.]+)\s+Pz\.?\s*(\d+)/i);
+        const item: Item = {
+          nome,
+          iva,
+          prezzo,
+          quantita: 1,
+          assignments: [],
+          showSplit: false
+        };
+
+        const nextLine = lines[i + 1];
+        const qtyMatch = nextLine?.match(qtyRegex);
+
         if (qtyMatch) {
           const prezzoCad = parseFloat(qtyMatch[1].replace(',', '.'));
           const quantita = parseInt(qtyMatch[2]);
           item.quantita = quantita;
-          nextLineIndex++; // Salta la riga della quantità
-        } else {
-          item.quantita = 1; // Default a 1 se non specificato
+          item.prezzo = prezzoCad;
+          i++;
         }
 
-        // Cerca lo sconto nella riga successiva
-        const discountLine = lines[nextLineIndex]?.match(discountRegex);
-        if (discountLine && item.prezzo != null) {
+        const discountLine = lines[i + 1]?.match(discountRegex);
+        if (discountLine) {
           const sconto = Math.abs(parseFloat(discountLine[1].replace(',', '.')));
           item.sconto = sconto;
-          item.prezzoFinale = +(item.prezzo - sconto).toFixed(2);
+          item.prezzoFinale = +(item.prezzo * item.quantita - sconto).toFixed(2);
+          i++;
         } else {
-          item.prezzoFinale = item.prezzo ?? 0;
+          item.prezzoFinale = +(item.prezzo * item.quantita).toFixed(2);
         }
-
-        item.assignments = [];
-        item.showSplit = false;
 
         items.push(item);
       }
