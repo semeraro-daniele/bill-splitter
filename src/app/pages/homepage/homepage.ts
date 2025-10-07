@@ -14,8 +14,7 @@ import Tesseract from 'tesseract.js';
     CommonModule,
     TranslateModule
   ],
-  templateUrl: './homepage.html',
-  styleUrl: './homepage.css',
+  templateUrl: './homepage.html'
 })
 export class Homepage implements OnInit {
   selectedFile: File | null = null;

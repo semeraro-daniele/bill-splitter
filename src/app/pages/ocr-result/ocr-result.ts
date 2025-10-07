@@ -13,8 +13,7 @@ import { LanguageService } from '../../services/language.service';
     TranslateModule,
     RouterModule
   ],
-  templateUrl: './ocr-result.html',
-  styleUrl: './ocr-result.css'
+  templateUrl: './ocr-result.html'
 })
 export class OCRResult {
   text: string = '';

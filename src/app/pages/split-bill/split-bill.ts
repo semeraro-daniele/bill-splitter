@@ -16,8 +16,7 @@ import { LanguageService } from '../../services/language.service';
     TranslateModule,
     RouterModule
   ],
-  templateUrl: './split-bill.html',
-  styleUrl: './split-bill.css'
+  templateUrl: './split-bill.html'
 })
 export class SplitBill {
   text: string = '';

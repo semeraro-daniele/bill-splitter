@@ -1,16 +1,13 @@
 @import "tailwindcss";
 
 .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    @apply top-0 left-0 fixed flex justify-center items-center w-screen h-screen;
     background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     z-index: 50;
     backdrop-filter: blur(4px);
     transition: all 0.3s ease;
+}
+
+.main-card {
+    @apply flex flex-col justify-center items-center bg-gray-50 px-4 min-h-screen;
 }
