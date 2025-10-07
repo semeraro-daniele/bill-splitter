@@ -23,6 +23,7 @@ export class SplitBill {
   items: Item[] = [];
   people: string[] = [];
   totals: Record<string, number> = {};
+  totalAmount: number = 0;
 
   newPerson = '';
 
@@ -62,6 +63,8 @@ export class SplitBill {
       const prezzoBase = prezzo * quantita;
       item.prezzoFinale = prezzoBase - sconto;
     }
+
+    this.totalAmount = this.items.reduce((sum, item) => sum + (item.prezzoFinale || 0), 0);
 
     const totals: Record<string, number> = {};
 

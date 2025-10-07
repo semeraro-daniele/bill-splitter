@@ -4,6 +4,8 @@
             {{ 'split_bill.split_bill' | translate }}
         </h1>
 
+        @if (items.length > 0) {
+
         <!-- Aggiungi persona -->
         <div class="flex sm:flex-row flex-col items-stretch sm:items-center gap-2 sm:gap-3 mb-4">
             <input type="text" [(ngModel)]="newPerson" placeholder="Aggiungi persona..."
@@ -14,7 +16,13 @@
             </button>
         </div>
 
-        @if (items.length > 0) {
+        <div class="pb-4">
+            <h3 class="flex-1 font-semibold text-gray-800 text-base">{{ 'split_bill.total_amount' | translate }}:
+                <span class="font-bold text-blue-700 text-lg">
+                    {{ totalAmount.toFixed(2) }} €
+                </span>
+            </h3>
+        </div>
 
         <!-- Vista Desktop: Tabella -->
         <div class="hidden lg:block">

@@ -21,6 +21,7 @@
     },
     "split_bill": {
         "split_bill": "Split Bill",
+        "total_amount": "Importo Totale (€)",
         "item": "Prodotto",
         "iva": "IVA",
         "quantity": "Quantità",
