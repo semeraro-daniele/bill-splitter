@@ -35,8 +35,15 @@
                     <tr class="hover:bg-gray-50 border-b">
                         <td class="p-2">{{ item.nome }}</td>
                         <td class="p-2 text-center">{{ item.iva || '-' }}%</td>
-                        <td class="p-2 text-center">{{ item.quantita || 1 }}</td>
-                        <td class="p-2 text-right">{{ item.prezzo?.toFixed(2) }}</td>
+                        <td class="p-2 text-center">
+                            <input type="number" min="1" [(ngModel)]="item.quantita" (change)="updateTotals()"
+                                class="px-2 py-1 border rounded-lg w-20 text-sm text-center" />
+                        </td>
+                        <td class="p-2 text-right">
+                            <input type="number" step="0.01" min="0" [(ngModel)]="item.prezzo" (change)="updateTotals()"
+                                class="px-2 py-1 border rounded-lg w-24 text-sm text-right" />
+                        </td>
+
                         <td class="p-2 text-red-600 text-right">
                             {{ item.sconto ? '-' + item.sconto.toFixed(2) : '-' }}
                         </td>
@@ -114,11 +121,13 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">{{ "split_bill.quantity" | translate }}:</span>
-                        <span class="font-medium">{{ item.quantita || 1 }}</span>
+                        <input type="number" min="1" [(ngModel)]="item.quantita" (change)="updateTotals()"
+                            class="px-2 py-1 border rounded-lg w-20 text-sm text-right" />
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">{{ "split_bill.price" | translate }}:</span>
-                        <span class="font-medium">{{ item.prezzo?.toFixed(2) }} €</span>
+                        <input type="number" step="0.01" min="0" [(ngModel)]="item.prezzo" (change)="updateTotals()"
+                            class="px-2 py-1 border rounded-lg w-24 text-sm text-right" />
                     </div>
                     @if (item.sconto) {
                     <div class="flex justify-between">
