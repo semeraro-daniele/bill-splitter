@@ -1,0 +1,39 @@
+{
+    "italian": "Italiano",
+    "english": "Inglese",
+    "error-page": {
+        "404": "Pagina non trovata",
+        "description": "Spiacenti, la pagina che stai cercando non esiste.",
+        "back-home": "Torna alla homepage"
+    },
+    "homepage": {
+        "title": "Analisi OCR Scontrini",
+        "description": "Carica un'immagine o un PDF per analizzarne il contenuto tramite OCR.",
+        "upload_text": "Trascina qui un file o clicca per selezionarne uno",
+        "supported_formats": "Formati supportati: PDF, PNG, JPEG",
+        "upload_button": "Carica e analizza",
+        "analized": "Analizzato"
+    },
+    "ocr_result": {
+        "text_analized": "Testo Analizzato",
+        "back_home": "Torna alla Home",
+        "split_bill": "Dividi il conto"
+    },
+    "split_bill": {
+        "split_bill": "Split Bill",
+        "item": "Prodotto",
+        "iva": "IVA",
+        "quantity": "Quantità",
+        "price": "Prezzo (€)",
+        "discount": "Sconto (€)",
+        "total": "Totale (€)",
+        "add": "+ Aggiungi",
+        "no_items": "Nessun prodotto rilevato.",
+        "person": "Persona",
+        "assign": "Assegna",
+        "add_assign": "+ Aggiungi assegnazione",
+        "details": "Dettaglio spese per persona:",
+        "tot": "Totale",
+        "back_home": "Torna alla Home"
+    }
+}

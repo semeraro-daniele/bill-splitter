@@ -1,0 +1,39 @@
+{
+    "italian": "Italian",
+    "english": "English",
+    "error-page": {
+        "404": "Page not found",
+        "description": "Sorry, the page you are looking for does not exist.",
+        "back-home": "Back to homepage"
+    },
+    "homepage": {
+        "title": "Receipt OCR Analysis",
+        "description": "Upload an image or PDF to analyze its content using OCR.",
+        "upload_text": "Drag a file here or click to select one",
+        "supported_formats": "Supported formats: PDF, PNG, JPEG",
+        "upload_button": "Upload and analyze",
+        "analized": "Analyzed"
+    },
+    "ocr_result": {
+        "text_analized": "Analyzed Text",
+        "back_home": "Back to Home",
+        "split_bill": "Split the bill"
+    },
+    "split_bill": {
+        "split_bill": "Split Bill",
+        "item": "Item",
+        "iva": "VAT",
+        "quantity": "Quantity",
+        "price": "Price (€)",
+        "discount": "Discount (€)",
+        "total": "Total (€)",
+        "add": "+ Add",
+        "no_items": "No items detected.",
+        "person": "Person",
+        "assign": "Assign",
+        "add_assign": "+ Add assignment",
+        "details": "Expense details per person:",
+        "tot": "Total",
+        "back_home": "Back to Home"
+    }
+}

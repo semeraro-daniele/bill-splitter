@@ -1,0 +1,221 @@
+<div class="flex flex-col justify-center items-center bg-gray-50 px-3 sm:px-4 py-4 sm:py-0 min-h-screen">
+    <div class="bg-white shadow-lg p-4 sm:p-8 rounded-2xl w-full max-w-5xl">
+        <h1 class="mb-4 sm:mb-6 font-bold text-gray-800 text-xl sm:text-2xl">
+            {{ 'split_bill.split_bill' | translate }}
+        </h1>
+
+        <!-- Aggiungi persona -->
+        <div class="flex sm:flex-row flex-col items-stretch sm:items-center gap-2 sm:gap-3 mb-4">
+            <input type="text" [(ngModel)]="newPerson" placeholder="Aggiungi persona..."
+                class="px-3 py-2 border rounded-xl w-full sm:w-48 text-sm" />
+            <button (click)="addPerson()"
+                class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl font-medium text-white text-sm whitespace-nowrap cursor-pointer">
+                {{ 'split_bill.add' | translate }}
+            </button>
+        </div>
+
+        @if (items.length > 0) {
+
+        <!-- Vista Desktop: Tabella -->
+        <div class="hidden lg:block">
+            <table class="w-full text-sm border-collapse">
+                <thead>
+                    <tr class="bg-gray-100 border-b">
+                        <th class="p-2 text-left">{{ "split_bill.item" | translate }}</th>
+                        <th class="p-2 text-center">{{ "split_bill.iva" | translate }}</th>
+                        <th class="p-2 text-center">{{ "split_bill.quantity" | translate }}</th>
+                        <th class="p-2 text-right">{{ "split_bill.price" | translate }}</th>
+                        <th class="p-2 text-right">{{ "split_bill.discount" | translate }}</th>
+                        <th class="p-2 text-right">{{ "split_bill.total" | translate }}</th>
+                        <th class="p-2 text-center">{{ "split_bill.person" | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of items; track $index) {
+                    <tr class="hover:bg-gray-50 border-b">
+                        <td class="p-2">{{ item.nome }}</td>
+                        <td class="p-2 text-center">{{ item.iva || '-' }}%</td>
+                        <td class="p-2 text-center">{{ item.quantita || 1 }}</td>
+                        <td class="p-2 text-right">{{ item.prezzo?.toFixed(2) }}</td>
+                        <td class="p-2 text-red-600 text-right">
+                            {{ item.sconto ? '-' + item.sconto.toFixed(2) : '-' }}
+                        </td>
+                        <td class="p-2 font-semibold text-right">
+                            {{ item.prezzoFinale?.toFixed(2) }}
+                        </td>
+                        <td class="p-2 text-center">
+                            <button (click)="item.showSplit = !item.showSplit"
+                                class="bg-blue-100 hover:bg-blue-200 px-3 py-2 rounded-lg font-medium text-blue-700 text-sm cursor-pointer">
+                                {{ "split_bill.assign" | translate }}
+                            </button>
+                        </td>
+                    </tr>
+
+                    @if (item.showSplit) {
+                    <tr class="bg-gray-50">
+                        <td colspan="7" class="p-3">
+                            <div class="space-y-2">
+                                @for (assign of item.assignments || []; track $index) {
+                                <div class="flex items-center gap-2">
+                                    <select [(ngModel)]="assign.person"
+                                        class="flex-1 px-3 py-2 border rounded-lg text-sm">
+                                        <option [ngValue]="null">Seleziona persona...</option>
+                                        @for (person of people; track $index) {
+                                        <option [value]="person">{{ person }}</option>
+                                        }
+                                    </select>
+
+                                    <input type="number" [(ngModel)]="assign.quantity" min="1"
+                                        [max]="getMaxAssignable(item, assign)"
+                                        class="px-3 py-2 border rounded-lg w-24 text-sm" placeholder="Qtà"
+                                        (change)="updateTotals()" />
+
+                                    <button (click)="removeAssignment(item, assign)"
+                                        class="bg-red-100 hover:bg-red-200 px-3 py-2 rounded-lg font-semibold text-red-600 text-sm cursor-pointer">
+                                        ✕
+                                    </button>
+                                </div>
+                                }
+
+                                <button (click)="addAssignment(item)" [disabled]="isFullyAssigned(item)"
+                                    [class.opacity-50]="isFullyAssigned(item)"
+                                    [class.cursor-not-allowed]="isFullyAssigned(item)"
+                                    class="bg-green-100 hover:bg-green-200 disabled:hover:bg-green-100 px-2 py-1 rounded-lg text-xs cursor-pointer">
+                                    {{ "split_bill.add_assign" | translate }}
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Vista Mobile e Tablet: Cards -->
+        <div class="lg:hidden space-y-3">
+            @for (item of items; track $index) {
+            <div class="bg-white shadow-sm border rounded-xl overflow-hidden">
+                <!-- Header Card -->
+                <div class="bg-gray-50 p-3 border-b">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="flex-1 font-semibold text-gray-800 text-base">{{ item.nome }}</h3>
+                        <span class="bg-blue-600 ml-2 px-2 py-1 rounded-lg font-bold text-white text-sm">
+                            {{ item.prezzoFinale?.toFixed(2) }} €
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Dettagli Item -->
+                <div class="space-y-2 p-3 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{{ "split_bill.iva" | translate }}:</span>
+                        <span class="font-medium">{{ item.iva || '-' }}%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{{ "split_bill.quantity" | translate }}:</span>
+                        <span class="font-medium">{{ item.quantita || 1 }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{{ "split_bill.price" | translate }}:</span>
+                        <span class="font-medium">{{ item.prezzo?.toFixed(2) }} €</span>
+                    </div>
+                    @if (item.sconto) {
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{{ "split_bill.discount" | translate }}:</span>
+                        <span class="font-medium text-red-600">-{{ item.sconto.toFixed(2) }} €</span>
+                    </div>
+                    }
+                </div>
+
+                <!-- Pulsante Assegna -->
+                <div class="p-3 pt-0">
+                    <button (click)="item.showSplit = !item.showSplit"
+                        class="bg-blue-100 hover:bg-blue-200 px-3 py-2 rounded-lg w-full font-medium text-blue-700 text-sm cursor-pointer">
+                        {{ item.showSplit ? '▲' : '▼' }} {{ "split_bill.assign" | translate }}
+                    </button>
+                </div>
+
+                <!-- Sezione Assegnazioni -->
+                @if (item.showSplit) {
+                <div class="space-y-3 bg-gray-50 p-3 border-t">
+                    @for (assign of item.assignments || []; track $index) {
+                    <div class="bg-white p-3 border rounded-lg">
+                        <div class="flex sm:flex-row flex-col gap-2">
+                            <select [(ngModel)]="assign.person" class="flex-1 px-3 py-2 border rounded-lg text-sm">
+                                <option [ngValue]="null">Seleziona persona...</option>
+                                @for (person of people; track $index) {
+                                <option [value]="person">{{ person }}</option>
+                                }
+                            </select>
+
+                            <div class="flex gap-2">
+                                <input type="number" [(ngModel)]="assign.quantity" min="1"
+                                    [max]="getMaxAssignable(item, assign)"
+                                    class="px-3 py-2 border rounded-lg w-24 text-sm" placeholder="Qtà"
+                                    (change)="updateTotals()" />
+
+                                <button (click)="removeAssignment(item, assign)"
+                                    class="bg-red-100 hover:bg-red-200 px-3 py-2 rounded-lg font-semibold text-red-600 text-sm">
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    }
+
+                    <button (click)="addAssignment(item)" [disabled]="isFullyAssigned(item)"
+                        [class.opacity-50]="isFullyAssigned(item)" [class.cursor-not-allowed]="isFullyAssigned(item)"
+                        class="bg-green-100 hover:bg-green-200 disabled:hover:bg-green-100 px-3 py-2 rounded-lg w-full font-medium text-green-700 text-sm">
+                        {{ "split_bill.add" | translate }}
+                    </button>
+                </div>
+                }
+            </div>
+            }
+        </div>
+
+        <!-- Dettaglio spese per persona -->
+        <div class="mt-8 sm:mt-10">
+            <h2 class="mb-3 sm:mb-4 font-semibold text-gray-700 text-base sm:text-lg">
+                {{ "split_bill.details" | translate }}
+            </h2>
+
+            @for (person of people; track $index) {
+            <div class="bg-gray-50 shadow-sm mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl">
+                <h3 class="flex sm:flex-row flex-col sm:justify-between sm:items-center gap-2 mb-3 pb-2 border-b">
+                    <span class="font-bold text-gray-800 text-base">👤 {{ person }}</span>
+                    <span class="font-bold text-blue-700 text-lg">
+                        {{ "split_bill.tot" | translate }}: {{ getDetailedTotals()[person]?.total?.toFixed(2) || '0.00'
+                        }} €
+                    </span>
+                </h3>
+
+                <ul class="divide-y divide-gray-200">
+                    @for (detail of getDetailedTotals()[person]?.items || []; track $index) {
+                    <li class="flex sm:flex-row flex-col sm:justify-between gap-1 sm:gap-2 py-2 text-sm">
+                        <span class="text-gray-700">
+                            {{ detail.name }}
+                            <span class="text-gray-500 text-xs">
+                                ({{ detail.quantity }} × {{ detail.unit.toFixed(2) }} €)
+                            </span>
+                        </span>
+                        <span class="font-semibold text-gray-900">{{ detail.subtotal.toFixed(2) }} €</span>
+                    </li>
+                    }
+                </ul>
+            </div>
+            }
+        </div>
+
+        } @else {
+        <p class="py-8 text-gray-600 text-center">{{ 'split_bill.no_items' | translate }}</p>
+        }
+
+        <button
+            class="bg-blue-600 hover:bg-blue-700 mt-6 sm:mt-8 px-4 py-2 rounded-xl w-full sm:w-auto font-medium text-white cursor-pointer"
+            routerLink="/homepage">
+            {{ 'split_bill.back_home' | translate }}
+        </button>
+    </div>
+</div>

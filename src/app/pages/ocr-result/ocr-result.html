@@ -1,0 +1,23 @@
+<div class="flex flex-col justify-center items-center bg-gray-50 px-4 min-h-screen">
+    <div class="bg-white shadow-lg p-8 rounded-2xl w-full max-w-3xl">
+        <h1 class="mb-4 font-bold text-gray-800 text-2xl">
+            {{ 'ocr_result.text_analized' | translate }}
+        </h1>
+
+        <pre class="bg-gray-100 p-4 border rounded-xl text-gray-700 text-sm whitespace-pre-wrap">
+      {{ text }}
+    </pre>
+
+        <div class="flex justify-around">
+            <button class="bg-blue-600 hover:bg-blue-700 mt-6 px-4 py-2 rounded-xl font-medium text-white cursor-pointer"
+                routerLink="/homepage">
+                {{ 'ocr_result.back_home' | translate }}
+            </button>
+            
+            <button class="bg-blue-600 hover:bg-blue-700 mt-6 px-4 py-2 rounded-xl font-medium text-white cursor-pointer"
+                 (click)="goToSplitBill()">
+                {{ 'ocr_result.split_bill' | translate }}
+            </button>
+        </div>
+    </div>
+</div>

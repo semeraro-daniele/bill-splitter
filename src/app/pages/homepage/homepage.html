@@ -1,0 +1,81 @@
+<div class="flex flex-col justify-center items-center bg-gray-50 px-4 min-h-screen">
+    <div class="bg-white shadow-lg p-8 rounded-2xl w-full max-w-lg text-center">
+        <h1 class="mb-6 font-bold text-gray-800 text-3xl">
+            {{ 'homepage.title' | translate }}
+        </h1>
+
+        <p class="mb-8 text-gray-600">
+            {{ 'homepage.description' | translate }}
+        </p>
+
+        <!-- Dropzone -->
+        <label
+            class="flex flex-col justify-center items-center border-2 border-gray-300 hover:border-blue-400 border-dashed rounded-xl w-full h-48 transition cursor-pointer"
+            (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+            @if (!selectedFile) {
+            <div class="flex flex-col items-center">
+                <svg class="mb-2 w-12 h-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" />
+                </svg>
+                <p class="text-gray-500 text-sm">
+                    {{ 'homepage.upload_text' | translate }}
+                </p>
+                <p class="text-gray-400 text-xs">
+                    {{ 'homepage.supported_formats' | translate }}
+                </p>
+            </div>
+            }
+
+            <!-- Preview -->
+            @if (selectedFile) {
+            <div class="text-center">
+                <p class="mb-2 font-medium text-gray-700">{{ selectedFile.name }}</p>
+                @if (previewUrl && isImage) {
+                <img [src]="previewUrl" alt="Anteprima" class="mx-auto border rounded-md w-40 h-40 object-contain" />
+                }
+            </div>
+            }
+
+            <input type="file" accept=".pdf,image/png,image/jpeg,image/jpg" (change)="onFileSelected($event)"
+                class="hidden" />
+        </label>
+
+        <!-- Upload button -->
+        <button
+            class="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 mt-6 px-4 py-2 rounded-xl w-full font-medium text-white transition cursor-pointer"
+            [disabled]="!selectedFile" (click)="uploadFile()">
+            {{ 'homepage.upload_button' | translate }}
+        </button>
+    </div>
+
+    <!-- Progress bar -->
+    @if (isLoading) {
+    <div class="loading-overlay">
+        <div class="flex flex-col items-center bg-white shadow-lg p-6 rounded-2xl w-80">
+            <svg class="mb-4 w-10 h-10 text-blue-600 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+
+            <div class="bg-gray-200 mb-2 rounded-full w-full h-3 overflow-hidden">
+                <div class="bg-blue-600 rounded-full h-3 transition-all duration-300" [style.width.%]="progress"></div>
+            </div>
+
+            <p class="font-medium text-gray-700 text-sm">
+                {{ progress }}% {{ 'homepage.analized' | translate }}
+            </p>
+        </div>
+    </div>
+    }
+
+    <!-- Risultato OCR -->
+    @if (ocrText && !isLoading) {
+    <div class="bg-gray-50 shadow-inner mt-6 p-4 border rounded-xl text-left">
+        <h2 class="mb-2 font-semibold text-gray-800 text-lg">Testo riconosciuto</h2>
+        <pre class="text-gray-700 text-sm whitespace-pre-wrap">{{ ocrText }}</pre>
+    </div>
+    }
+</div>
