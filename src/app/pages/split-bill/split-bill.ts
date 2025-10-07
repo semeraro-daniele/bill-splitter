@@ -58,11 +58,9 @@ export class SplitBill {
       const quantita = item.quantita || 1;
       const prezzo = item.prezzo || 0;
       const sconto = item.sconto || 0;
-      const iva = item.iva ? item.iva / 100 : 0;
 
       const prezzoBase = prezzo * quantita;
-      const prezzoConIva = prezzoBase + (prezzoBase * iva);
-      item.prezzoFinale = prezzoConIva - sconto;
+      item.prezzoFinale = prezzoBase - sconto;
     }
 
     const totals: Record<string, number> = {};
