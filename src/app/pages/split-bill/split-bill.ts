@@ -142,15 +142,14 @@ export class SplitBill {
     const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
     const items: Item[] = [];
 
-    const itemRegex = /^(.+?)\s+(\d+)%\s+([\d,.]+)$/;
+    const itemRegex = /^(.+?)\s+(\d+)%\s+(-?[\d,.]+)$/;
     const qtyRegex = /^Cad\s+([\d,.]+)\s+Pz\.?\s*(\d+)/i;
-    const discountRegex = /^Sconto.+?([\d,]+)$/i;
+    const discountRegex = /^(Sconto|Offerta).+?(-?[\d,]+)$/i;
+    const skipRegex = /^(DESCRIZIONE|VALORE SCONTI|SUBTOTALE|TOTALE|IMPORTO|PAGAMENTO|DI CUI IVA|DOCUMENTO|RT)/i;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-
-      // Salta righe non prodotto
-      if (/^(DESCRIZIONE|SUBTOTALE|TOTALE|DI CUI IVA)/i.test(line)) continue;
+      if (skipRegex.test(line)) continue;
 
       const match = line.match(itemRegex);
       if (match) {
@@ -169,18 +168,15 @@ export class SplitBill {
 
         const nextLine = lines[i + 1];
         const qtyMatch = nextLine?.match(qtyRegex);
-
         if (qtyMatch) {
-          const prezzoCad = parseFloat(qtyMatch[1].replace(',', '.'));
-          const quantita = parseInt(qtyMatch[2]);
-          item.quantita = quantita;
-          item.prezzo = prezzoCad;
+          item.prezzo = parseFloat(qtyMatch[1].replace(',', '.'));
+          item.quantita = parseInt(qtyMatch[2]);
           i++;
         }
 
         const discountLine = lines[i + 1]?.match(discountRegex);
         if (discountLine) {
-          const sconto = Math.abs(parseFloat(discountLine[1].replace(',', '.')));
+          const sconto = Math.abs(parseFloat(discountLine[2].replace(',', '.')));
           item.sconto = sconto;
           item.prezzoFinale = +(item.prezzo * item.quantita - sconto).toFixed(2);
           i++;
