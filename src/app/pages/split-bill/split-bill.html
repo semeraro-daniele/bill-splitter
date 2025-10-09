@@ -65,8 +65,8 @@
                             </button>
                         </td>
                     </tr>
-
                     @if (item.showSplit) {
+                    @if (people.length > 0) {
                     <tr class="bg-gray-50">
                         <td colspan="7" class="p-3">
                             <div class="space-y-2">
@@ -101,6 +101,11 @@
                             </div>
                         </td>
                     </tr>
+                    } @else {
+                    <div class="p-3 text-gray-500 text-sm italic">
+                        {{ "split_bill.no_people" | translate }}
+                    </div>
+                    }
                     }
                     }
                 </tbody>
@@ -123,22 +128,22 @@
 
                 <!-- Dettagli Item -->
                 <div class="space-y-2 p-3 text-sm">
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-center">
                         <span class="text-gray-600">{{ "split_bill.iva" | translate }}:</span>
                         <span class="font-medium">{{ item.iva || '-' }}%</span>
                     </div>
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-center">
                         <span class="text-gray-600">{{ "split_bill.quantity" | translate }}:</span>
                         <input type="number" min="1" [(ngModel)]="item.quantita" (change)="updateTotals()"
                             class="px-2 py-1 border rounded-lg w-20 text-sm text-right" />
                     </div>
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-center">
                         <span class="text-gray-600">{{ "split_bill.price" | translate }}:</span>
                         <input type="number" step="0.01" min="0" [(ngModel)]="item.prezzo" (change)="updateTotals()"
                             class="px-2 py-1 border rounded-lg w-24 text-sm text-right" />
                     </div>
                     @if (item.sconto) {
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-center">
                         <span class="text-gray-600">{{ "split_bill.discount" | translate }}:</span>
                         <input type="number" step="0.01" min="0" [(ngModel)]="item.sconto" (change)="updateTotals()"
                             class="px-2 py-1 border border-red-600 rounded-lg w-24 text-sm text-right" />
@@ -156,6 +161,7 @@
 
                 <!-- Sezione Assegnazioni -->
                 @if (item.showSplit) {
+                @if (people.length > 0) {
                 <div class="space-y-3 bg-gray-50 p-3 border-t">
                     @for (assign of item.assignments || []; track $index) {
                     <div class="bg-white p-3 border rounded-lg">
@@ -188,6 +194,11 @@
                         {{ "split_bill.add" | translate }}
                     </button>
                 </div>
+                } @else {
+                <div class="p-3 text-gray-500 text-sm italic">
+                    {{ "split_bill.no_people" | translate }}
+                </div>
+                }
                 }
             </div>
             }
@@ -195,6 +206,7 @@
 
         <!-- Dettaglio spese per persona -->
         <div class="mt-8 sm:mt-10">
+            @if (people.length > 0) {
             <h2 class="mb-3 sm:mb-4 font-semibold text-gray-700 text-base sm:text-lg">
                 {{ "split_bill.details" | translate }}
             </h2>
@@ -223,6 +235,7 @@
                     }
                 </ul>
             </div>
+            }
             }
         </div>
 

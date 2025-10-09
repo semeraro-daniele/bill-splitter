@@ -1,6 +1,6 @@
 export interface Item {
   nome: string;
-  iva: number;
+  iva?: number;
   prezzo: number;
   quantita: number;
   sconto?: number;

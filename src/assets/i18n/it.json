@@ -35,6 +35,7 @@
         "add_assign": "+ Aggiungi assegnazione",
         "details": "Dettaglio spese per persona:",
         "tot": "Totale",
+        "no_people": "Nessuna persona aggiunta. Aggiungi persone per assegnare i prodotti.",
         "back_home": "Torna alla Home"
     }
 }
