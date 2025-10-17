@@ -8,9 +8,9 @@
     },
     "homepage": {
         "title": "Receipt OCR Analysis",
-        "description": "Upload an image or PDF to analyze its content using OCR.",
+        "description": "Upload an image to analyze its content using OCR.",
         "upload_text": "Drag a file here or click to select one",
-        "supported_formats": "Supported formats: PDF, PNG, JPEG",
+        "supported_formats": "Supported formats: PNG, JPEG",
         "upload_button": "Upload and analyze",
         "analized": "Analyzed"
     },

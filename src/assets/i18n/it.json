@@ -8,9 +8,9 @@
     },
     "homepage": {
         "title": "Analisi OCR Scontrini",
-        "description": "Carica un'immagine o un PDF per analizzarne il contenuto tramite OCR.",
+        "description": "Carica un'immagine per analizzarne il contenuto tramite OCR.",
         "upload_text": "Trascina qui un file o clicca per selezionarne uno",
-        "supported_formats": "Formati supportati: PDF, PNG, JPEG",
+        "supported_formats": "Formati supportati: PNG, JPEG",
         "upload_button": "Carica e analizza",
         "analized": "Analizzato"
     },
