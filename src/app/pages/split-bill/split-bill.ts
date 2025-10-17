@@ -35,11 +35,23 @@ export class SplitBill {
   ngOnInit() {
     this.translate.use(this.languageService.getLanguage());
     const savedText = sessionStorage.getItem('cleanText');
-    this.text = savedText || 'Nessun testo disponibile.';
 
-    if (savedText) {
-      this.parseItems(savedText);
+    if (!savedText) {
+      this.text = 'Nessun testo disponibile.';
+      this.items = [];
+      this.people = [];
+      this.totals = {};
+      this.totalAmount = 0;
+      return;
     }
+
+    this.items = [];
+    this.people = [];
+    this.totals = {};
+    this.totalAmount = 0;
+
+    this.text = savedText;
+    this.parseItems(savedText);
   }
 
   addPerson() {
@@ -151,7 +163,9 @@ export class SplitBill {
       const line = lines[i];
       if (skipRegex.test(line)) continue;
 
-      const match = line.match(itemRegex);
+      // Prova a fare il match con il formato standard
+      let match = line.match(itemRegex);
+
       if (match) {
         const nome = match[1].trim();
         const iva = parseInt(match[2]);
