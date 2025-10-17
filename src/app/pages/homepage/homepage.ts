@@ -33,6 +33,17 @@ export class Homepage implements OnInit {
 
   ngOnInit() {
     this.translate.use(this.languageService.getLanguage());
+
+    this.selectedFile = null;
+    this.previewUrl = null;
+    this.isImage = false;
+    this.isLoading = false;
+    this.ocrText = '';
+    this.progress = 0;
+
+    // Pulisci sessionStorage
+    sessionStorage.removeItem('ocrText');
+    sessionStorage.removeItem('cleanText');
   }
 
   onFileSelected(event: Event) {
